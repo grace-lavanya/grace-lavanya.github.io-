@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grâce Destinée — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F7F5F0;
+      --ink: #1A1A18;
+      --muted: #888880;
+      --accent: #2A5EF5;
+      --line: #E2DFD8;
+      --card: #EFEDE8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 3rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 6rem 0; border-bottom: 1px solid var(--line); }
+    section:last-child { border-bottom: none; }
+
+    /* ── HERO ── */
+    #hero {
+      padding-top: 10rem;
+      padding-bottom: 6rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 1.4rem;
+      color: var(--muted);
+      max-width: 440px;
+      font-size: 13px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.35s forwards;
+    }
+    .hero-actions {
+      margin-top: 2.4rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.45s forwards;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 0.65rem 1.4rem;
+      border: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 0.65rem 1.4rem;
+      border: 1px solid var(--line);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+    .hero-meta {
+      text-align: right;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.5s forwards;
+    }
+    .hero-meta span { display: block; margin-bottom: 0.3rem; }
+    .status-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: #22C55E;
+      border-radius: 50%;
+      margin-right: 0.4rem;
+      animation: pulse 2s infinite;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── COMPÉTENCES ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+    .skill-group {
+      padding: 1.6rem;
+      border: 1px solid var(--line);
+      margin: -1px 0 0 -1px;
+      transition: background 0.2s;
+    }
+    .skill-group:hover { background: var(--card); }
+    .skill-group h3 {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 0.2rem 0.6rem;
+      font-size: 12px;
+      color: var(--ink);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── PROJETS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 0; }
+    .project-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr auto;
+      gap: 1.5rem;
+      align-items: start;
+      padding: 1.8rem 0;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      color: var(--ink);
+      transition: background 0.15s;
+    }
+    .project-item:first-child { border-top: 1px solid var(--line); }
+    .project-item:hover .project-title { color: var(--accent); }
+    .project-num {
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 0.2rem;
+    }
+    .project-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+      transition: color 0.2s;
+    }
+    .project-desc { font-size: 12px; color: var(--muted); margin-bottom: 0.8rem; }
+    .project-techs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .tech {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 0.15rem 0.5rem;
+    }
+    .project-arrow {
+      font-size: 18px;
+      color: var(--line);
+      transition: color 0.2s, transform 0.2s;
+      padding-top: 0.1rem;
+    }
+    .project-item:hover .project-arrow { color: var(--accent); transform: translate(2px, -2px); }
+
+    /* ── CV ── */
+    .cv-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem;
+      border: 1px solid var(--line);
+      gap: 2rem;
+    }
+    .cv-block p { color: var(--muted); font-size: 13px; margin-top: 0.4rem; }
+    .cv-block h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .contact-item {
+      padding: 1.6rem;
+      border: 1px solid var(--line);
+      margin: -1px 0 0 -1px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: background 0.2s;
+      display: block;
+    }
+    .contact-item:hover { background: var(--card); color: var(--accent); }
+    .contact-item .c-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .contact-item .c-value { font-size: 12px; word-break: break-all; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { gap: 1.2rem; }
+      main { padding: 0 1.2rem; }
+      #hero { grid-template-columns: 1fr; }
+      .hero-meta { text-align: left; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .project-item { grid-template-columns: 2rem 1fr auto; gap: 1rem; }
+      .cv-block { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">GL.</a>
+  <ul class="nav-links">
+    <li><a href="#competences">Skills</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#cv">CV</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div>
+      <p class="hero-eyebrow">Étudiante en alternance · ESGI Paris</p>
+      <h1>Grâce<br><em>Destinée</em><br>Lebiki Lavanya</h1>
+      <p class="hero-sub">
+        Bachelor Informatique · Développement logiciel, systèmes embarqués, réseaux.
+        À la recherche d'une alternance pour contribuer à des projets techniques concrets.
+      </p>
+      <div class="hero-actions">
+        <a href="#projets" class="btn-primary">Voir mes projets</a>
+        <a href="https://github.com/grace-lavanya" target="_blank" class="btn-ghost">GitHub ↗</a>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span><span class="status-dot"></span>Disponible</span>
+      <span>Livry-Gargan (93)</span>
+      <span>Mobilité France</span>
+      <span style="margin-top:0.8rem; display:block;">2025 — 2028</span>
+    </div>
+  </section>
+
+  <!-- COMPÉTENCES -->
+  <section id="competences">
+    <p class="section-label reveal">Compétences</p>
+    <div class="skills-grid reveal">
+      <div class="skill-group">
+        <h3>Langages</h3>
+        <div class="skill-tags">
+          <span class="tag">C</span>
+          <span class="tag">SQL</span>
+          <span class="tag">HTML5</span>
+          <span class="tag">CSS3</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Embarqué & Algo</h3>
+        <div class="skill-tags">
+          <span class="tag">Arduino</span>
+          <span class="tag">Régulation PID</span>
+          <span class="tag">Algorithmique</span>
+          <span class="tag">Structures de données</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Réseaux</h3>
+        <div class="skill-tags">
+          <span class="tag">TCP/IP</span>
+          <span class="tag">VLAN</span>
+          <span class="tag">DHCP / DNS</span>
+          <span class="tag">Packet Tracer</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Outils</h3>
+        <div class="skill-tags">
+          <span class="tag">Git</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">Linux</span>
+          <span class="tag">VirtualBox</span>
+          <span class="tag">VMware</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETS -->
+  <section id="projets">
+    <p class="section-label reveal">Projets</p>
+    <div class="projects-list">
+
+      <a href="https://github.com/grace-lavanya/Brassard-connect-" target="_blank" class="project-item reveal">
+        <span class="project-num">01</span>
+        <div>
+          <div class="project-title">Brassard connecté</div>
+          <div class="project-desc">Système embarqué de détection de chute avec alerte déclenchée en moins de 2 secondes.</div>
+          <div class="project-techs">
+            <span class="tech">C</span>
+            <span class="tech">Arduino</span>
+            <span class="tech">Embarqué</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <a href="https://github.com/grace-lavanya/capteur-cardiaque-connect-" target="_blank" class="project-item reveal">
+        <span class="project-num">02</span>
+        <div>
+          <div class="project-title">Capteur cardiaque connecté</div>
+          <div class="project-desc">Mesure de la fréquence cardiaque en temps réel avec affichage LCD et transmission Bluetooth.</div>
+          <div class="project-techs">
+            <span class="tech">C</span>
+            <span class="tech">Arduino</span>
+            <span class="tech">Capteur pulsation</span>
+            <span class="tech">LCD</span>
+            <span class="tech">Bluetooth</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <div class="project-item reveal" style="opacity:0.45; cursor:default; pointer-events:none;">
+        <span class="project-num">···</span>
+        <div>
+          <div class="project-title" style="font-style:italic;">Projets en cours</div>
+          <div class="project-desc">De nouveaux projets arrivent bientôt.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CV -->
+  <section id="cv">
+    <p class="section-label reveal">Curriculum Vitæ</p>
+    <div class="cv-block reveal">
+      <div>
+        <h3>Télécharger mon CV</h3>
+        <p>Disponible en 4 versions selon le poste visé — Dev, Réseau, Support N1, R&D.</p>
+      </div>
+      <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+        <a href="./cv/CV_Developpeuse_Junior_ATS.docx" download class="btn-primary">Dev Web / Logiciel</a>
+        <a href="./cv/CV_Administratrice_Reseau_ATS.docx" download class="btn-ghost">Admin Réseau</a>
+        <a href="./cv/CV_Support_N1_Helpdesk_ATS.docx" download class="btn-ghost">Support N1</a>
+        <a href="./cv/CV_RD_Informatique_ATS.docx" download class="btn-ghost">R&D</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label reveal">Contact</p>
+    <div class="contact-grid reveal">
+      <a href="mailto:gracelavanya63@gmail.com" class="contact-item">
+        <div class="c-label">Email</div>
+        <div class="c-value">gracelavanya63@gmail.com</div>
+      </a>
+      <a href="https://linkedin.com/in/grace-destinee-lebiki-lavanya" target="_blank" class="contact-item">
+        <div class="c-label">LinkedIn</div>
+        <div class="c-value">grace-destinee-lebiki-lavanya</div>
+      </a>
+      <a href="https://github.com/grace-lavanya" target="_blank" class="contact-item">
+        <div class="c-label">GitHub</div>
+        <div class="c-value">github.com/grace-lavanya</div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2025 Grâce Destinée Lebiki Lavanya &nbsp;·&nbsp; Bachelor Informatique · ESGI Paris
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursor.style.background = 'transparent';
+      cursor.style.border = '1.5px solid #2A5EF5';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '6px';
+      cursor.style.height = '6px';
+      cursor.style.background = '#2A5EF5';
+      cursor.style.border = 'none';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
