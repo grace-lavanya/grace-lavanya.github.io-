@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grâce Destinée — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F5F2EC;
+      --bg2: #EDE9E0;
+      --ink: #1C1C1A;
+      --muted: #7A7A72;
+      --accent: #7A9E7E;
+      --accent-light: #C5D9C7;
+      --accent-dark: #4A7050;
+      --line: #DDD9D0;
+      --white: #FAFAF7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(245, 242, 236, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--line); }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo em { font-style: italic; color: var(--accent-dark); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent-dark); }
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 30px;
+      font-size: 0.78rem !important;
+      letter-spacing: 0.08em !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--accent-dark) !important; color: white !important; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--ink);
+      transition: all 0.3s;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 1.5rem 2rem;
+      z-index: 99;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 1rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-dark);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 30px; height: 1px;
+      background: var(--accent);
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent-dark);
+    }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      padding: 0.75rem 1.8rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      padding: 0.75rem 1.8rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1.5px solid var(--line);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    /* Hero right — stats */
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+    .hero-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      width: 100%;
+      max-width: 320px;
+      transition: transform 0.3s;
+    }
+    .hero-card:hover { transform: translateY(-3px); }
+    .hero-card-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .hero-card-value { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--ink); }
+    .hero-card-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+    .status-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 0.4rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 6rem 4rem; }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-dark);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+      letter-spacing: -0.02em;
+    }
+    .section-title em { font-style: italic; color: var(--accent-dark); }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p { color: var(--muted); line-height: 1.9; margin-bottom: 1.2rem; }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .skill-item {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--line);
+    }
+    .skill-item h4 { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 0.5rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-tag {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── TIMELINE ── */
+    #timeline { background: var(--bg); }
+    .timeline {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 120px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--line);
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateY(0); }
+    .timeline-date {
+      text-align: right;
+      padding-top: 0.2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .timeline-content {
+      padding-left: 2rem;
+      position: relative;
+    }
+    .timeline-content::before {
+      content: '';
+      position: absolute;
+      left: -5px; top: 8px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+    .timeline-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+    .timeline-content .tl-sub { font-size: 0.82rem; color: var(--accent-dark); margin-bottom: 0.5rem; font-weight: 500; }
+    .timeline-content p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── PROJETS ── */
+    #projets { background: var(--white); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: var(--ink);
+      display: block;
+    }
+    .project-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .project-preview {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-preview.p1 { background: linear-gradient(135deg, #C5D9C7, #7A9E7E); }
+    .project-preview.p2 { background: linear-gradient(135deg, #D4C5A9, #B8956A); }
+    .project-preview.p3 { background: linear-gradient(135deg, #C5C9D9, #7A7E9E); }
+    .project-preview.p4 { background: linear-gradient(135deg, #D9C5C5, #9E7A7A); }
+    .project-preview.p5 { background: linear-gradient(135deg, #C5D9D4, #7A9E98); }
+    .project-preview-label {
+      position: absolute;
+      top: 0.8rem; right: 0.8rem;
+      background: rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: white;
+      font-weight: 500;
+    }
+    .project-body { padding: 1.3rem; }
+    .project-body h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .project-body p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.6; }
+    .project-techs { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tech {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .project-footer {
+      padding: 0.8rem 1.3rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--accent-dark);
+      font-weight: 500;
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg2); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-info p { color: var(--muted); line-height: 1.9; margin-bottom: 2rem; font-size: 0.92rem; }
+    .contact-links { display: flex; flex-direction: column; gap: 0.8rem; }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.88rem;
+      padding: 0.7rem 1rem;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .contact-link:hover { border-color: var(--accent); transform: translateX(4px); }
+    .contact-link-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    /* FORM */
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .form-group input, .form-group textarea {
+      background: var(--white);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    #form-msg { font-size: 0.85rem; color: var(--accent-dark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.4);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    footer a:hover { color: var(--accent-light); }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; gap: 2rem; }
+      .hero-right { align-items: stretch; }
+      .hero-card { max-width: 100%; }
+      section { padding: 4rem 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .timeline::before { left: 80px; }
+      .timeline-item { grid-template-columns: 80px 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.8rem; text-align: center; padding: 1.5rem 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .timeline::before { left: 60px; }
+      .timeline-item { grid-template-columns: 60px 1fr; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">G<em>L</em>.</a>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#timeline">Parcours</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#contact" class="nav-cta">Me contacter</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="toggleMenu()">À propos</a>
+  <a href="#timeline" onclick="toggleMenu()">Parcours</a>
+  <a href="#projets" onclick="toggleMenu()">Projets</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Étudiante en alternance · ESGI Paris</p>
+    <h1>Grâce<br><em>Destinée</em><br>Lebiki Lavanya</h1>
+    <p class="hero-sub">Bachelor Informatique · Support utilisateur, systèmes & réseaux, développement. À la recherche d'une alternance pour accompagner les utilisateurs et contribuer à des projets techniques.</p>
+    <div class="hero-btns">
+      <a href="#projets" class="btn-primary">Voir mes projets</a>
+      <a href="https://github.com/grace-lavanya" target="_blank" class="btn-ghost">GitHub ↗</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card">
+      <div class="hero-card-label"><span class="status-dot"></span>Disponible</div>
+      <div class="hero-card-value">2025 – 2028</div>
+      <div class="hero-card-sub">Alternance · 3 sem entreprise / 1 sem école</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-label">Localisation</div>
+      <div class="hero-card-value">Livry-Gargan</div>
+      <div class="hero-card-sub">Seine-Saint-Denis (93) · Mobilité France</div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-label">Projets réalisés</div>
+      <div class="hero-card-value">5 projets</div>
+      <div class="hero-card-sub">Arduino, Python, Flask, JavaScript</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label reveal">Qui suis-je</p>
+  <h2 class="section-title reveal">À <em>propos</em></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Étudiante en Bachelor Informatique à l'ESGI Paris, je me forme en alternance pour devenir technicienne support informatique. Curieuse et rigoureuse, j'aime comprendre comment les systèmes fonctionnent et aider les utilisateurs à résoudre leurs problèmes.</p>
+      <p>Mes projets vont du système embarqué Arduino au développement web full-stack avec Python Flask — une diversité qui reflète ma volonté d'apprendre en faisant.</p>
+      <p>Je cherche une entreprise où je peux apporter de la valeur dès le premier jour, tout en continuant à progresser au contact d'une équipe technique.</p>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-item">
+        <h4>Systèmes</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Windows</span>
+          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">Active Directory</span>
+        </div>
+      </div>
+      <div class="skill-item">
+        <h4>Réseaux</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">TCP/IP</span>
+          <span class="skill-tag">DNS</span>
+          <span class="skill-tag">DHCP</span>
+          <span class="skill-tag">VPN</span>
+        </div>
+      </div>
+      <div class="skill-item">
+        <h4>Développement</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Flask</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="skill-item">
+        <h4>Embarqué</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Arduino</span>
+          <span class="skill-tag">C</span>
+          <span class="skill-tag">Capteurs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <p class="section-label reveal">Mon histoire</p>
+  <h2 class="section-title reveal">Mon <em>parcours</em></h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2025 – 2028</div>
+      <div class="timeline-content">
+        <h3>Bachelor Informatique</h3>
+        <div class="tl-sub">ESGI Paris · En cours</div>
+        <p>Formation en alternance spécialisée en systèmes, réseaux et développement. Rythme 3 semaines entreprise / 1 semaine école.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025</div>
+      <div class="timeline-content">
+        <h3>Brassard connecté</h3>
+        <div class="tl-sub">Projet Arduino · C</div>
+        <p>Système embarqué de détection de chute avec alerte déclenchée en moins de 2 secondes. Premier projet matériel.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025</div>
+      <div class="timeline-content">
+        <h3>Capteur cardiaque connecté</h3>
+        <div class="tl-sub">Projet Arduino · Bluetooth</div>
+        <p>Mesure de la fréquence cardiaque en temps réel avec affichage LCD et transmission Bluetooth HC-05.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026</div>
+      <div class="timeline-content">
+        <h3>To-Do List fullstack</h3>
+        <div class="tl-sub">Python Flask · SQLite · JavaScript</div>
+        <p>Première application web complète avec API REST, base de données et déploiement en production sur Render.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026</div>
+      <div class="timeline-content">
+        <h3>API Recettes de cuisine</h3>
+        <div class="tl-sub">Python Flask · Documentation interactive</div>
+        <p>API REST avec 5 routes, documentation interactive testable en ligne et client web complet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETS -->
+<section id="projets">
+  <p class="section-label reveal">Ce que j'ai construit</p>
+  <h2 class="section-title reveal">Mes <em>projets</em></h2>
+  <div class="projects-grid">
+
+    <a href="https://grace-lavanya.github.io/todo-app" target="_blank" class="project-card reveal">
+      <div class="project-preview p1">
+        <span>✅</span>
+        <span class="project-preview-label">En ligne</span>
+      </div>
+      <div class="project-body">
+        <h3>To-Do List fullstack</h3>
+        <p>Application web complète avec API REST Flask, base de données SQLite et frontend JavaScript.</p>
+        <div class="project-techs">
+          <span class="tech">Python</span>
+          <span class="tech">Flask</span>
+          <span class="tech">SQLite</span>
+          <span class="tech">JavaScript</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le projet</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+    <a href="https://grace-lavanya.github.io/api-recettes" target="_blank" class="project-card reveal">
+      <div class="project-preview p2">
+        <span>🍽️</span>
+        <span class="project-preview-label">En ligne</span>
+      </div>
+      <div class="project-body">
+        <h3>API Recettes de cuisine</h3>
+        <p>API REST avec documentation interactive, client web et 5 routes. Recherche et filtres par catégorie.</p>
+        <div class="project-techs">
+          <span class="tech">Python</span>
+          <span class="tech">Flask</span>
+          <span class="tech">REST API</span>
+          <span class="tech">Doc interactive</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le projet</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/grace-lavanya/Brassard-connect-" target="_blank" class="project-card reveal">
+      <div class="project-preview p3">
+        <span>🦺</span>
+        <span class="project-preview-label">GitHub</span>
+      </div>
+      <div class="project-body">
+        <h3>Brassard connecté</h3>
+        <p>Système embarqué de détection de chute avec alerte déclenchée en moins de 2 secondes.</p>
+        <div class="project-techs">
+          <span class="tech">Arduino</span>
+          <span class="tech">C</span>
+          <span class="tech">Capteurs</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le code</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/grace-lavanya/capteur-cardiaque-connect-" target="_blank" class="project-card reveal">
+      <div class="project-preview p4">
+        <span>❤️</span>
+        <span class="project-preview-label">GitHub</span>
+      </div>
+      <div class="project-body">
+        <h3>Capteur cardiaque connecté</h3>
+        <p>Mesure de la fréquence cardiaque en temps réel avec affichage LCD et transmission Bluetooth.</p>
+        <div class="project-techs">
+          <span class="tech">Arduino</span>
+          <span class="tech">C</span>
+          <span class="tech">Bluetooth</span>
+          <span class="tech">LCD</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le code</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/grace-lavanya/potager-autonome" target="_blank" class="project-card reveal">
+      <div class="project-preview p5">
+        <span>🌱</span>
+        <span class="project-preview-label">GitHub</span>
+      </div>
+      <div class="project-body">
+        <h3>Potager autonome</h3>
+        <p>Système d'arrosage automatique intelligent avec capteurs d'humidité, lumière et pompe à eau.</p>
+        <div class="project-techs">
+          <span class="tech">Arduino</span>
+          <span class="tech">C</span>
+          <span class="tech">Capteurs</span>
+          <span class="tech">LCD</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le code</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+    <a href="https://github.com/grace-lavanya/gestionnaire-contacts" target="_blank" class="project-card reveal">
+      <div class="project-preview" style="background: linear-gradient(135deg, #D9D4C5, #9E9470);">
+        <span>📒</span>
+        <span class="project-preview-label">GitHub</span>
+      </div>
+      <div class="project-body">
+        <h3>Gestionnaire de contacts</h3>
+        <p>Application console en C avec ajout, recherche, suppression et sauvegarde automatique dans un fichier texte.</p>
+        <div class="project-techs">
+          <span class="tech">C</span>
+          <span class="tech">Fichiers</span>
+          <span class="tech">Structures</span>
+          <span class="tech">Console</span>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span>Voir le code</span>
+        <span>↗</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal">Travaillons ensemble</p>
+  <h2 class="section-title reveal">Me <em>contacter</em></h2>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <p>Tu cherches une alternante motivée en support informatique, réseaux ou développement ? N'hésite pas à me contacter, je réponds rapidement.</p>
+      <div class="contact-links">
+        <a href="mailto:gracelavanya63@gmail.com" class="contact-link">
+          <span class="contact-link-icon">✉️</span>
+          gracelavanya63@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/grace-destinee-lebiki-lavanya" target="_blank" class="contact-link">
+          <span class="contact-link-icon">💼</span>
+          LinkedIn
+        </a>
+        <a href="https://github.com/grace-lavanya" target="_blank" class="contact-link">
+          <span class="contact-link-icon">🐙</span>
+          GitHub
+        </a>
+      </div>
+    </div>
+    <form class="contact-form reveal" action="https://formspree.io/f/myknpplg" method="POST" id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" name="prenom" placeholder="Votre prénom" required />
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" name="nom" placeholder="Votre nom" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="votre@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Entreprise</label>
+        <input type="text" name="entreprise" placeholder="Nom de votre entreprise (optionnel)" />
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" placeholder="Parlez-moi de votre besoin..." required></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-primary">Envoyer le message</button>
+        <span id="form-msg"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Grâce Destinée LEBIKI LAVANYA</span>
+  <span>Fait avec ♥ — <a href="https://github.com/grace-lavanya" target="_blank">GitHub</a></span>
+</footer>
+
+<script>
+  // ── NAV SCROLL ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ── HAMBURGER ──
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  // ── REVEAL ON SCROLL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal, .timeline-item').forEach(el => observer.observe(el));
+
+  // ── CONTACT FORM (Formspree) ──
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    const msg = document.getElementById('form-msg');
+    btn.textContent = 'Envoi...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        msg.textContent = '✓ Message envoyé !';
+        msg.style.color = 'var(--accent-dark)';
+        this.reset();
+      } else {
+        msg.textContent = '⚠️ Erreur, réessayez.';
+        msg.style.color = '#E63946';
+      }
+    } catch {
+      msg.textContent = '⚠️ Erreur de connexion.';
+      msg.style.color = '#E63946';
+    }
+    btn.textContent = 'Envoyer le message';
+    btn.disabled = false;
+  });
+</script>
+
+</body>
+</html>
